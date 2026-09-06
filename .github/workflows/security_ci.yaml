@@ -27,3 +27,15 @@ jobs:
 
       - name: "Check vulnerabilities"
         run: "uv audit"
+
+      - name: "Run Script / Check"
+        env:
+         AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+        # Python run with if else as run is expected to fail due to fake credentials
+        run: |
+            if uv run python src/security_ci_pipeline/main.py; then
+              echo "Script completed successfully."
+            else
+              echo "::Warning:: Script exited with non-zero-status code"
+            fi
