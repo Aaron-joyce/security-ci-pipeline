@@ -1,9 +1,10 @@
 import boto3
+import os
 
-# Deliberately hard-coded fake credentials for the case study
-AWS_ACCESS_KEY_ID = "AKIA5F7D8E9A0B1C2D3E"
-AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCY918273645a"
-REGION_NAME = "us-east-1"
+# loading the Keys from environment
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+REGION_NAME = os.getenv("REGION_NAME", "us-east-1")
 
 
 def handle_dynamodb():

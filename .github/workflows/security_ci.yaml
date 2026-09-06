@@ -12,8 +12,10 @@ jobs:
           fetch-depth: 0
       - name: "Scan Code"
         uses: "gitleaks/gitleaks-action@v3"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  run-lint:
+  sca-and-run:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout Code"
@@ -27,3 +29,16 @@ jobs:
 
       - name: "Check vulnerabilities"
         run: "uv audit"
+
+      - name: "Run Script / Check"
+        env:
+         AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+         AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+         REGION_NAME: ${{secrets.REGION_NAME}}
+        # Python run with if else as run is expected to fail due to fake credentials
+        run: |
+            if uv run python src/security_ci_pipeline/main.py; then
+              echo "Script completed successfully."
+            else
+              echo "::Warning:: Script exited with non-zero-status code"
+            fi
